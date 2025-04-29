@@ -22,13 +22,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.*
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.navigation.ROUT_REGISTER
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_ABOUT
 import com.brayo.greenhaven.navigation.ROUT_HOME
+import com.brayo.greenhaven.ui.screens.splash.SplashScreen
 //import com.brayo.greenhaven.navigation.ROUT_DASHBOARD
 //import com.brayo.greenhaven.navigation.ROUT_ITEM
 //import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
@@ -65,12 +69,15 @@ fun LoginScreen(
         }
     }
 //End of login logic
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp)
-            .background(color = green),
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF66BB6A), Color(0xFF388E3C)) // Slightly different green gradient
+                )
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

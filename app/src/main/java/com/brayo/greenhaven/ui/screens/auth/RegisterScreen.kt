@@ -28,12 +28,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.model.User
 import com.brayo.greenhaven.navigation.ROUT_LOGIN
-import com.brayo.greenhaven.ui.theme.green
 import com.brayo.greenhaven.viewmodel.AuthViewModel
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +77,9 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    var role by remember { mutableStateOf("customer") } // Declare role here
+    var expanded by remember { mutableStateOf(false) } // Declare expanded here
+    val roleOptions = listOf("customer", "Farmer") // Role options
     val context = LocalContext.current
     val animatedAlpha by animateFloatAsState(
         targetValue = 1f,
@@ -60,54 +91,29 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(color = green),
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF81C784), Color(0xFF388E3C)) // Slightly different green gradient
+                )
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
+
+        // Animated Title
         AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
             Text(
-                "Create Your Account",
+                text = "Create Your Account",
                 fontSize = 40.sp,
-                fontFamily = FontFamily.Cursive
+                fontFamily = FontFamily.Cursive,
+                color = Color.White // Title text color to blend with the background
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Username
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Username Icon") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        //End of username
-
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        //Email
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-        //End of email
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        //Role
-        var role by remember { mutableStateOf("user") }
-        val roleOptions = listOf("user", "admin")
-        var expanded by remember { mutableStateOf(false) }
-
+        // Role Dropdown
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -116,9 +122,11 @@ fun RegisterScreen(
                 value = role,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Select Role") },
+                label = { Text("Select Role", color = Color.White) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -135,7 +143,9 @@ fun RegisterScreen(
                 }
             }
         }
-        //End of role
+
+        Spacer(modifier = Modifier.height(8.dp))
+
 
 
 

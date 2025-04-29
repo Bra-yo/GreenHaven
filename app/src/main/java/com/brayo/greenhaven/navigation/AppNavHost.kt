@@ -13,13 +13,14 @@ import com.brayo.greenhaven.ui.screens.about.AboutScreen
 import com.brayo.greenhaven.ui.screens.auth.LoginScreen
 import com.brayo.greenhaven.ui.screens.auth.RegisterScreen
 import com.brayo.greenhaven.ui.screens.home.HomeScreen
+import com.brayo.greenhaven.ui.screens.splash.SplashScreen
 import com.brayo.greenhaven.viewmodel.AuthViewModel
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_HOME
+    startDestination: String = ROUT_SPLASH
 ) {
 
     val context = LocalContext.current
@@ -35,6 +36,9 @@ fun AppNavHost(
         }
         composable(ROUT_ABOUT) {
             AboutScreen(navController)
+        }
+        composable(ROUT_SPLASH) {
+            SplashScreen(navController)
         }
 
 
