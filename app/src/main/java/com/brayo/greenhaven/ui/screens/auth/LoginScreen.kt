@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -30,14 +31,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.navigation.ROUT_REGISTER
 import com.brayo.greenhaven.R
-import com.brayo.greenhaven.navigation.ROUT_ABOUT
-import com.brayo.greenhaven.navigation.ROUT_HOME
-import com.brayo.greenhaven.ui.screens.splash.SplashScreen
-//import com.brayo.greenhaven.navigation.ROUT_DASHBOARD
-//import com.brayo.greenhaven.navigation.ROUT_ITEM
-//import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
-import com.brayo.greenhaven.ui.theme.green
+
 import com.brayo.greenhaven.viewmodel.AuthViewModel
+
+
 
 @Composable
 fun LoginScreen(
@@ -50,98 +47,108 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Observe login logic
-    LaunchedEffect(authViewModel) {
-        authViewModel.loggedInUser = { user ->
-           if (user == null) {
-                Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
-            } else {
-              if (user.role == "admin") {
-                   navController.navigate(ROUT_HOME)
-                    {
-                    }
-               } else {
-                  navController.navigate(ROUT_ABOUT)
-                  {
-                    }
-                }
-            }
-        }
-    }
-//End of login logic
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF66BB6A), Color(0xFF388E3C)) // Slightly different green gradient
-                )
-            ),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(Color.White)
     ) {
-        // Animated Welcome Text
-        AnimatedVisibility(
-            visible = true,
-            enter = fadeIn(animationSpec = tween(1000)),
-            exit = fadeOut(animationSpec = tween(1000))
+        // Top Card with Image
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.farm), // Replace with your image resource
+                contentDescription = "Top Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            IconButton(
+                onClick = { /* Handle back navigation */ },
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Welcome Text
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Welcome Back!",
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Cursive
+                text = "Welcome Back",
+                fontSize = 28.sp,
+                fontFamily = FontFamily.SansSerif,
+                color = Color(0xFF388E3C)
+            )
+            Text(
+                text = "Login to your account",
+                fontSize = 16.sp,
+                color = Color.Gray
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Email Input
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Password Input with Show/Hide Toggle
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Gradient Login Button
-        Box(
+        // Login Form
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFFF3763C), Color(0xFFFF5900))
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Email Input
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF1F8E9), RoundedCornerShape(12.dp))
+                    .padding(4.dp),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Password Input
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            painter = painterResource(if (passwordVisible) R.drawable.visibility else R.drawable.visibilityoff),
+                            contentDescription = null
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF1F8E9), RoundedCornerShape(12.dp))
+                    .padding(4.dp),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Login Button
             Button(
                 onClick = {
                     if (email.isBlank() || password.isBlank()) {
@@ -150,20 +157,30 @@ fun LoginScreen(
                         authViewModel.loginUser(email, password)
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Login", color = Color.White)
+                Text("Login", color = Color.White, fontSize = 18.sp)
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Register Navigation Button
-        TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
-            Text("Don't have an account? Register")
+            // Register Navigation
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text("Don't have an account?", color = Color.Gray)
+                Spacer(modifier = Modifier.width(4.dp))
+                TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
+                    Text("Sign up", color = Color(0xFF388E3C))
+                }
+            }
         }
     }
 }
+
 

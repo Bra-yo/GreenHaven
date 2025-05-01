@@ -12,6 +12,7 @@ import com.brayo.greenhaven.repository.UserRepository
 import com.brayo.greenhaven.ui.screens.about.AboutScreen
 import com.brayo.greenhaven.ui.screens.auth.LoginScreen
 import com.brayo.greenhaven.ui.screens.auth.RegisterScreen
+import com.brayo.greenhaven.ui.screens.onboard.OnboardScreen
 import com.brayo.greenhaven.ui.screens.home.HomeScreen
 import com.brayo.greenhaven.ui.screens.splash.SplashScreen
 import com.brayo.greenhaven.viewmodel.AuthViewModel
@@ -39,6 +40,9 @@ fun AppNavHost(
         }
         composable(ROUT_SPLASH) {
             SplashScreen(navController)
+        }
+        composable(ROUT_ONBOARD) {
+            OnboardScreen(navController)
         }
 
 
@@ -90,3 +94,5 @@ fun AppNavHost(
 
 
 }
+
+

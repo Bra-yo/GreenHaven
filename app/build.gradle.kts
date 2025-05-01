@@ -76,4 +76,15 @@ dependencies {
     //livedata
     implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
 
+
+    //HorizontalPager and HorizontalPagerIndicator
+
+   implementation ("com.google.accompanist:accompanist-pager:0.28.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
+
+
+
+    implementation("androidx.compose.foundation:foundation:1.6.1") // Or latest version
+    implementation("androidx.compose.material:material:1.6.1")
+
 }

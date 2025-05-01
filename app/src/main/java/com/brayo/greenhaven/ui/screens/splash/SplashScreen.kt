@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_LOGIN
+import com.brayo.greenhaven.navigation.ROUT_ONBOARD
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,8 +36,8 @@ fun SplashScreen(navController: NavHostController) {
     // Navigation
     val coroutine = rememberCoroutineScope()
     coroutine.launch {
-        delay(5000)
-        navController.navigate(ROUT_LOGIN)
+        delay(3000)
+        navController.navigate(ROUT_ONBOARD)
     }
 
     // UI
