@@ -40,10 +40,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.viewmodel.ProductViewModel
 import com.brayo.greenhaven.model.Product
-import com.brayo.greenhaven.navigation.ROUT_DASHBOARD
-import com.brayo.greenhaven.navigation.ROUT_INTENT
-import com.brayo.greenhaven.navigation.editProductRoute
-import com.brayo.greenhaven.ui.theme.neworange
+import com.brayo.greenhaven.ui.theme.green
+
 import java.io.IOException
 import java.io.OutputStream
 
@@ -52,7 +50,6 @@ import java.io.OutputStream
 @Composable
 fun UserProductScreen(navController: NavController, viewModel: ProductViewModel) {
     val productList by viewModel.allProducts.observeAsState(emptyList())
-    var showMenu by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
     val filteredProducts = productList.filter {
@@ -64,35 +61,10 @@ fun UserProductScreen(navController: NavController, viewModel: ProductViewModel)
             Column {
                 TopAppBar(
                     title = { Text("Products", fontSize = 20.sp) },
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(Color.LightGray),
-                    actions = {
-                        IconButton(onClick = { showMenu = true }) {
-                            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
-                        }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Intent") },
-                                onClick = {
-                                    navController.navigate(ROUT_INTENT)
-                                    showMenu = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Dashboard") },
-                                onClick = {
-                                    navController.navigate(ROUT_DASHBOARD)
-                                    showMenu = false
-                                }
-                            )
-                        }
-                    }
+                    colors = TopAppBarDefaults.mediumTopAppBarColors(Color.LightGray)
                 )
 
-
-                //Search Bar
+                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -109,8 +81,8 @@ fun UserProductScreen(navController: NavController, viewModel: ProductViewModel)
                         )
                     },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,  // Border color when focused
-                        unfocusedBorderColor = Color.Gray, // Border color when not focused
+                        focusedBorderColor = Color.Black,
+                        unfocusedBorderColor = Color.Gray,
                         focusedTextColor = Color.Black,
                         unfocusedTextColor = Color.DarkGray
                     )
@@ -122,7 +94,7 @@ fun UserProductScreen(navController: NavController, viewModel: ProductViewModel)
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = neworange)
+                .background(color = green)
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
@@ -146,12 +118,7 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                if (product.id != 0) {
-                    navController.navigate(ROUT_EDIT_PRODUCT)
-                }
-            },
+            .padding(vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -162,7 +129,11 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                 contentDescription = "Product Image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(200.dp)
+                    .clickable {
+                        // Navigate to Product Details Screen
+                        navController.navigate("product_details/${product.id}")
+                    },
                 contentScale = ContentScale.Crop
             )
 
@@ -198,161 +169,31 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                 )
             }
 
-            // Buttons (Message, Edit, Delete, Download PDF)
+            // Add to Cart Button
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .align(Alignment.BottomEnd)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                OutlinedButton(
+                    onClick = {
+                        // Add product to cart and navigate to CartScreen
+                        viewModel.addToCart(product)
+                        navController.navigate("cart_screen")
+                    },
+                    shape = RoundedCornerShape(8.dp),
                 ) {
-                    // Message Seller
-                    OutlinedButton(
-                        onClick = {
-                            val smsIntent = Intent(Intent.ACTION_SENDTO)
-                            smsIntent.data = "smsto:${product.phone}".toUri()
-                            smsIntent.putExtra("sms_body", "Hello Seller,...?")
-                            context.startActivity(smsIntent)
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Send,
-                                contentDescription = "Message Seller"
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(text = "Message Seller")
-                        }
-                    }
-
-                    // Edit Product
-                    IconButton(
-                        onClick = {
-                            navController.navigate(editProductRoute(product.id))
-                        }
-                    ) {
+                    Row {
                         Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            tint = Color.White
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "Add to Cart"
                         )
-                    }
-
-                    // Delete Product
-                    IconButton(
-                        onClick = { viewModel.deleteProduct(product) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
-                            tint = Color.White
-                        )
-                    }
-
-                    // Download PDF
-                    IconButton(
-                        onClick = { generateProductPDF(context, product) }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.download),
-                            contentDescription = "",
-                            tint = Color.White
-                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(text = "Add to Cart")
                     }
                 }
             }
         }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.Q)
-fun generateProductPDF(context: Context, product: Product) {
-    val pdfDocument = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
-    val page = pdfDocument.startPage(pageInfo)
-    val canvas = page.canvas
-    val paint = android.graphics.Paint()
-
-    val bitmap: Bitmap? = try {
-        product.imagePath?.let {
-            val uri = Uri.parse(it)
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                BitmapFactory.decodeStream(inputStream)
-            }
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-
-    bitmap?.let {
-        val scaledBitmap = Bitmap.createScaledBitmap(it, 250, 150, false)
-        canvas.drawBitmap(scaledBitmap, 25f, 20f, paint)
-    }
-
-    paint.textSize = 16f
-    paint.isFakeBoldText = true
-    canvas.drawText("Product Details", 80f, 200f, paint)
-
-    paint.textSize = 12f
-    paint.isFakeBoldText = false
-    canvas.drawText("Name: ${product.name}", 50f, 230f, paint)
-    canvas.drawText("Price: Ksh${product.price}", 50f, 250f, paint)
-    canvas.drawText("Seller Phone: ${product.phone}", 50f, 270f, paint)
-
-    pdfDocument.finishPage(page)
-
-    // Save PDF using MediaStore (Scoped Storage)
-    val fileName = "${product.name}_Details.pdf"
-    val contentValues = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-        put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-    }
-
-    val contentResolver = context.contentResolver
-    val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
-    if (uri != null) {
-        try {
-            val outputStream: OutputStream? = contentResolver.openOutputStream(uri)
-            if (outputStream != null) {
-                pdfDocument.writeTo(outputStream)
-                Toast.makeText(context, "PDF saved to Downloads!", Toast.LENGTH_LONG).show()
-            }
-            outputStream?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(context, "Failed to save PDF!", Toast.LENGTH_LONG).show()
-        }
-    } else {
-        Toast.makeText(context, "Failed to create file!", Toast.LENGTH_LONG).show()
-    }
-
-    pdfDocument.close()
-}
-
-// Bottom Navigation Bar Component
-@Composable
-fun BottomNavigationBar1(navController: NavController) {
-    NavigationBar(
-        containerColor = Color(0xFFA2B9A2),
-        contentColor = Color.White
-    ) {
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Product List") },
-            label = { Text("Home") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_ADD_PRODUCT) },
-            icon = { Icon(Icons.Default.AddCircle, contentDescription = "Add Product") },
-            label = { Text("Add") }
-        )
     }
 }

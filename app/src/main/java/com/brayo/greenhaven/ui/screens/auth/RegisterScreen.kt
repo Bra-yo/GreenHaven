@@ -194,6 +194,11 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        //Role
+        var role by remember { mutableStateOf("user") }
+        val roleOptions = listOf("user", "admin")
+        var expanded by remember { mutableStateOf(false) }
+
         // Role Selection Dropdown
         ExposedDropdownMenuBox(
             expanded = expanded,

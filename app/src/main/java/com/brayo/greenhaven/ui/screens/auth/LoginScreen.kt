@@ -31,6 +31,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.navigation.ROUT_REGISTER
 import com.brayo.greenhaven.R
+import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
+import com.brayo.greenhaven.navigation.ROUT_HOME
 
 import com.brayo.greenhaven.viewmodel.AuthViewModel
 
@@ -46,6 +48,25 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+
+    // Observe login logic
+    LaunchedEffect(authViewModel) {
+        authViewModel.loggedInUser = { user ->
+            if (user == null) {
+                Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+            } else {
+                if (user.role == "farmer") {
+                    navController.navigate(ROUT_ADD_PRODUCT) {
+                    }
+                } else {
+                    navController.navigate(ROUT_HOME) {
+                    }
+                }
+            }
+        }
+    }
+//End of login logic
 
     Column(
         modifier = Modifier
