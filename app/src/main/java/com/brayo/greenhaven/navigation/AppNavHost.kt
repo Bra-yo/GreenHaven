@@ -22,6 +22,10 @@ import com.brayo.greenhaven.ui.screens.onboard.OnboardScreen
 import com.brayo.greenhaven.ui.screens.home.HomeScreen
 import com.brayo.greenhaven.ui.screens.products.UserProductScreen
 import com.brayo.greenhaven.ui.screens.addtocart.CartScreen
+import com.brayo.greenhaven.ui.screens.dashboards.ConsumerDashboardScreen
+import com.brayo.greenhaven.ui.screens.dashboards.FarmerDashboardScreen
+import com.brayo.greenhaven.ui.screens.intent.IntentScreen
+import com.brayo.greenhaven.ui.screens.profile.ConsumerProfileScreen
 import com.brayo.greenhaven.ui.screens.splash.SplashScreen
 import com.brayo.greenhaven.ui.screens.userproducts.AddProductScreen
 import com.brayo.greenhaven.ui.screens.userproducts.EditProductScreen
@@ -64,6 +68,21 @@ fun AppNavHost(
         }
         composable(ROUT_CART) {
             CartScreen(navController)
+        }
+        composable(ROUT_CONSUMERDASHBOARD) {
+            ConsumerDashboardScreen(navController)
+        }
+        composable(ROUT_FARMERDASHBOARD) {
+            FarmerDashboardScreen(navController)
+        }
+        composable(ROUT_INTENT) {
+            IntentScreen(navController)
+        }
+        composable(ROUT_CONSUMERPROFILE) {
+            ConsumerProfileScreen(navController)
+        }
+        composable(ROUT_FARMERPROFILE) {
+            FarmerProfileScreen(navController)
         }
 
 

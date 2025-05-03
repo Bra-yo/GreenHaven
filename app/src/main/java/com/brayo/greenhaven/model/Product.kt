@@ -9,5 +9,10 @@ data class Product(
     val name: String,
     val price: Double,
     val phone: String,
-    val imagePath: String
-)
+    val imagePath: String,
+    val description : String
+) {
+    // Computed property to map imagePath to imageUri
+    val imageUri: String
+        get() = imagePath // Use imagePath as the URI
+}

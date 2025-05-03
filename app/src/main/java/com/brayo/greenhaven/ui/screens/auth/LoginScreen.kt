@@ -32,11 +32,11 @@ import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.navigation.ROUT_REGISTER
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
+import com.brayo.greenhaven.navigation.ROUT_CONSUMERDASHBOARD
+import com.brayo.greenhaven.navigation.ROUT_FARMERDASHBOARD
 import com.brayo.greenhaven.navigation.ROUT_HOME
 
 import com.brayo.greenhaven.viewmodel.AuthViewModel
-
-
 
 @Composable
 fun LoginScreen(
@@ -49,7 +49,6 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-
     // Observe login logic
     LaunchedEffect(authViewModel) {
         authViewModel.loggedInUser = { user ->
@@ -57,23 +56,26 @@ fun LoginScreen(
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
                 if (user.role == "farmer") {
-                    navController.navigate(ROUT_ADD_PRODUCT) {
+                    navController.navigate(ROUT_FARMERDASHBOARD) {
                     }
                 } else {
-                    navController.navigate(ROUT_HOME) {
+                    navController.navigate(ROUT_CONSUMERDASHBOARD) {
                     }
                 }
             }
         }
     }
-//End of login logic
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFFEEF4ED), Color(0xFFFFFFFF)) // Light green gradient
+                )
+            )
     ) {
-        // Top Card with Image
+        // Top Section with Decorative Image
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +83,7 @@ fun LoginScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.farm), // Replace with your image resource
-                contentDescription = "Top Image",
+                contentDescription = "Decorative Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
@@ -94,7 +96,7 @@ fun LoginScreen(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White
+                    tint = Color(0xFF388E3C) // Green tint for the back button
                 )
             }
         }
@@ -112,7 +114,7 @@ fun LoginScreen(
                 text = "Welcome Back",
                 fontSize = 28.sp,
                 fontFamily = FontFamily.SansSerif,
-                color = Color(0xFF388E3C)
+                color = Color(0xFF388E3C) // Green text color
             )
             Text(
                 text = "Login to your account",
@@ -123,7 +125,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Form
+        // Existing Login Form
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -181,7 +183,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)), // Green button color
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Login", color = Color.White, fontSize = 18.sp)
@@ -197,7 +199,7 @@ fun LoginScreen(
                 Text("Don't have an account?", color = Color.Gray)
                 Spacer(modifier = Modifier.width(4.dp))
                 TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
-                    Text("Sign up", color = Color(0xFF388E3C))
+                    Text("Sign up", color = Color(0xFF388E3C)) // Green text for "Sign up"
                 }
             }
         }

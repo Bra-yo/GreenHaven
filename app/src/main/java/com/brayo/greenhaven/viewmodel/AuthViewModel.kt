@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {
     var loggedInUser: ((User?) -> Unit)? = null
+    var currentUser: User? = null // Holds the currently logged-in user
 
     fun registerUser(user: User) {
         viewModelScope.launch {
@@ -18,7 +19,12 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             val user = repository.loginUser(email, password)
+            currentUser = user // Set the current user
             loggedInUser?.invoke(user)
         }
+    }
+
+    fun logoutUser() {
+        currentUser = null // Clear the current user on logout
     }
 }

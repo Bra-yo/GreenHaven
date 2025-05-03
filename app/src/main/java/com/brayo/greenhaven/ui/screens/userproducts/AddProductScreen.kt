@@ -35,6 +35,7 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showMenu by remember { mutableStateOf(false) }
 
@@ -101,6 +102,15 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                     onValueChange = { name = it },
                     label = { Text("Product Name") },
                     leadingIcon = { Icon(painter = painterResource(R.drawable.name), contentDescription = "Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Product Description
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Product Description") },
+                    leadingIcon = { Icon(painter = painterResource(R.drawable.name), contentDescription = "description") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
