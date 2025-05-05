@@ -24,9 +24,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.MaterialTheme
-
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -34,11 +32,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.runtime.remember
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import com.brayo.greenhaven.navigation.ROUT_REGISTER
+
+data class OnboardingItem(
+    val image: Int,
+    val text: String
+)
 
 @Composable
-fun OnboardScreen(navController: NavController){
+fun OnboardScreen(navController: NavController) {
+    val onboardingItems = remember {
+        listOf(
+            OnboardingItem(R.drawable.farm, "Welcome to GreenHaven"),
+            OnboardingItem(R.drawable.farm2, "Sell your farm products with us"),
+            OnboardingItem(R.drawable.farm3, "Buy fresh products from our farmers"),
+            OnboardingItem(R.drawable.farm4, "Start")
+        )
+    }
 
-    OnboardingScreen(navController)
+    OnboardingScreen(
+        navController = navController,
+        items = onboardingItems
+    )
 }
 
 @Composable
@@ -70,28 +89,15 @@ fun HorizontalPagerIndicator(
     }
 }
 
-
 @Composable
-fun OnboardingScreen(navController: NavController) {
-    val images = listOf(
-        R.drawable.farm, // First image
-        R.drawable.farm2, // Second image
-        R.drawable.farm3, // Third image
-        R.drawable.farm4  // Fourth image
-    )
-    val texts = listOf(
-        "Welcome to GreenHaven",
-        "Sell your farm products with us",
-        "Buy fresh products from our farmers",
-        "Start"
-    )
-
-    val pagerState: PagerState = rememberPagerState(
+fun OnboardingScreen(
+    navController: NavController,
+    items: List<OnboardingItem>
+) {
+    val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
-        pageCount = {
-            images.size
-        }
+        pageCount = { items.size }
     )
 
     Column(
@@ -103,59 +109,84 @@ fun OnboardingScreen(navController: NavController) {
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) { page ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-            ) {
-                // Display the image
-                Image(
-                    painter = painterResource(id = images[page]),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-                // Display the text at the center
-                Text(
-                    text = texts[page],
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily.SansSerif,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                // If it's the last page, show the "Join us" button
-                if (page == images.lastIndex) {
-                    Button(
-                        onClick = { navController.navigate("register") },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF388E3C)),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("Join us", color = Color.White, fontSize = 18.sp)
+            OnboardingPage(
+                item = items[page],
+                isLastPage = page == items.lastIndex,
+                onJoinClick = {
+                    navController.navigate(ROUT_REGISTER) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
                     }
                 }
-            }
+            )
         }
 
-        // Horizontal Pager Indicator
+        Spacer(modifier = Modifier.height(8.dp))
+
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp),
             activeColor = Color(0xFF388E3C),
-            inactiveColor = Color.Gray
+            inactiveColor = Color.Gray,
+            indicatorWidth = 8.dp,
+            indicatorHeight = 8.dp
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun OnboardingPage(
+    item: OnboardingItem,
+    isLastPage: Boolean,
+    onJoinClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+        Image(
+            painter = painterResource(id = item.image),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        Text(
+            text = item.text,
+            color = Color.White,
+            fontSize = 24.sp,
+            fontFamily = FontFamily.SansSerif,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 16.dp)
+        )
+
+        if (isLastPage) {
+            Button(
+                onClick = onJoinClick,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFF388E3C)),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    "Join us",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardScreenPreview(){
+fun OnboardScreenPreview() {
     OnboardScreen(navController = rememberNavController())
 }

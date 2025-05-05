@@ -1,16 +1,16 @@
 package com.brayo.greenhaven.ui.screens.splash
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -27,17 +27,29 @@ import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_LOGIN
 import com.brayo.greenhaven.navigation.ROUT_ONBOARD
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SplashScreen(navController: NavHostController) {
+fun SplashScreen(navController: NavHostController, context: Context) {
+    // Access SharedPreferences
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences("GreenHavenPrefs", Context.MODE_PRIVATE)
+    val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
 
-    // Navigation
-    val coroutine = rememberCoroutineScope()
-    coroutine.launch {
-        delay(3000)
-        navController.navigate(ROUT_ONBOARD)
+    // Navigation logic
+    LaunchedEffect(Unit) {
+        delay(3000) // Simulate splash screen delay
+        if (isFirstLaunch) {
+            // Navigate to onboard screen
+            navController.navigate(ROUT_ONBOARD) {
+                popUpTo(0) // Clear the back stack
+            }
+            // Update SharedPreferences to mark the app as launched
+            sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
+        } else {
+            // Navigate to login screen
+            navController.navigate(ROUT_LOGIN) {
+                popUpTo(0) // Clear the back stack
+            }
+        }
     }
 
     // UI
@@ -52,21 +64,26 @@ fun SplashScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        // App Logo
         Image(
             painter = painterResource(R.drawable.logomain),
             contentDescription = "App Logo",
-            modifier = Modifier
-                .size(600.dp)
+            modifier = Modifier.size(300.dp)
         )
 
-
-
-
+        // App Name
+        Text(
+            text = "GreenHaven",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen(rememberNavController())
+    SplashScreen(rememberNavController(), context = androidx.compose.ui.platform.LocalContext.current)
 }

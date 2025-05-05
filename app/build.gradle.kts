@@ -87,4 +87,23 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.6.1") // Or latest version
     implementation("androidx.compose.material:material:1.6.1")
 
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+
+
+
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+    implementation ("androidx.compose.material:material:1.4.2")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
+    // Material3
+    implementation("androidx.compose.material3:material3:1.2.0")
+
+
+
+
+
+
+
 }

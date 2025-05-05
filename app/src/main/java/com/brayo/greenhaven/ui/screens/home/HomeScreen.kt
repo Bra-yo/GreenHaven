@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,126 +28,195 @@ fun HomeScreen(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                drawerContainerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.width(300.dp)
+            ) {
+                DrawerContent(navController, drawerState, scope)
+            }
+        }
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Home", fontSize = 20.sp) },
+                    title = { 
+                        Text(
+                            "GreenHaven",
+                            style = MaterialTheme.typography.titleLarge
+                        ) 
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu"
+                            )
                         }
                     }
                 )
             }
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(onClick = { navController.navigate(ROUT_ADD_PRODUCT) }) {
-                    Text(text = "Add Product")
-                }
-            }
-        }
-
-        // **Overlay when drawer is open** (Clicking it closes the drawer)
-        if (drawerState.isOpen) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)) // Semi-transparent overlay
-                    .clickable { scope.launch { drawerState.close() } } // Closes on click
-            )
-        }
-
-        // **Navigation Drawer**
-        if (drawerState.isOpen) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(280.dp) // Adjust width for better appearance
-                    .background(Color(0xFF615A5D)) // Cute pastel pink background
-                    .padding(top = 56.dp) // Start below the top bar
-            ) {
-                DrawerContent(navController, drawerState, scope)
-            }
+            HomeContent(navController, paddingValues)
         }
     }
 }
 
 @Composable
-fun DrawerContent(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
+private fun HomeContent(
+    navController: NavController,
+    paddingValues: PaddingValues
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(16.dp)
+    ) {
+        // Quick Actions Section
+        Text(
+            "Quick Actions",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            ActionCard(
+                icon = Icons.Default.AddCircle,
+                title = "Add Product",
+                onClick = { navController.navigate(ROUT_ADD_PRODUCT) }
+            )
+            ActionCard(
+                icon = Icons.Default.List,
+                title = "View Products",
+                onClick = { navController.navigate(ROUT_PRODUCT_LIST) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionCard(
+    icon: ImageVector,
+    title: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .weight(1f)
+            .aspectRatio(1f)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
+}
+
+@Composable
+private fun DrawerContent(
+    navController: NavController,
+    drawerState: DrawerState,
+    scope: CoroutineScope
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.Start
+            .padding(vertical = 12.dp)
     ) {
-        // **Drawer Header with Close Button**
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Explore", fontSize = 24.sp, color = Color.White, modifier = Modifier.weight(1f))
-            IconButton(onClick = { scope.launch { drawerState.close() } }) {
-                Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White)
-            }
-        }
-
-        Divider(color = Color.White, thickness = 1.dp)
-
-        DrawerItem("Home", Icons.Default.Home) {
-            navController.navigate(ROUT_HOME)
-            scope.launch { drawerState.close() }
-        }
-
-        DrawerItem("Product List", Icons.Default.List) {
-            navController.navigate(ROUT_PRODUCT_LIST)
-            scope.launch { drawerState.close() }
-        }
-
-        DrawerItem("Add Product", Icons.Default.AddCircle) {
-            navController.navigate(ROUT_ADD_PRODUCT)
-            scope.launch { drawerState.close() }
-        }
-
-        DrawerItem("About", Icons.Default.Info) {
-            navController.navigate(ROUT_ABOUT)
-            scope.launch { drawerState.close() }
-        }
-
-        DrawerItem("Login", Icons.Default.Person) {
-            navController.navigate(ROUT_LOGIN)
-            scope.launch { drawerState.close() }
-        }
-
-        DrawerItem("Register", Icons.Default.Person) {
-            navController.navigate(ROUT_REGISTER)
-            scope.launch { drawerState.close() }
-        }
+        DrawerHeader()
+        Divider()
+        DrawerBody(navController, drawerState, scope)
     }
 }
 
 @Composable
-fun DrawerItem(title: String, icon: ImageVector, onClick: () -> Unit) {
-    Row(
+private fun DrawerHeader() {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(12.dp)
-            .background(Color.White, shape = RoundedCornerShape(8.dp)), // Styled item
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Icon(icon, contentDescription = title, modifier = Modifier.size(24.dp), tint = Color(0xFF6200EA))
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(text = title, fontSize = 18.sp, color = Color(0xFF6200EA)) // Readable text
+        Text(
+            "GreenHaven",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
-    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+private fun DrawerBody(
+    navController: NavController,
+    drawerState: DrawerState,
+    scope: CoroutineScope
+) {
+    val items = listOf(
+        Pair("Home", Icons.Default.Home),
+        Pair("Products", Icons.Default.List),
+        Pair("Add Product", Icons.Default.AddCircle),
+        Pair("About", Icons.Default.Info),
+        Pair("Login", Icons.Default.Person),
+        Pair("Register", Icons.Default.PersonAdd)
+    )
+
+    Column {
+        items.forEach { (title, icon) ->
+            NavigationDrawerItem(
+                icon = { Icon(icon, contentDescription = null) },
+                label = { Text(title) },
+                selected = false,
+                onClick = {
+                    val route = when(title) {
+                        "Home" -> ROUT_HOME
+                        "Products" -> ROUT_PRODUCT_LIST
+                        "Add Product" -> ROUT_ADD_PRODUCT
+                        "About" -> ROUT_ABOUT
+                        "Login" -> ROUT_LOGIN
+                        "Register" -> ROUT_REGISTER
+                        else -> ROUT_HOME
+                    }
+                    navController.navigate(route)
+                    scope.launch { drawerState.close() }
+                },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)

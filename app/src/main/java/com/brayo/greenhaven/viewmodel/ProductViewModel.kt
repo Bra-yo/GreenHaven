@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.util.UUID
 
 class ProductViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -20,16 +21,26 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
 
     val allProducts: LiveData<List<Product>> = productDao.getAllProducts()
 
-    fun addProduct(name: String, price: Double, phone: String, imageUri: String) {
+    fun addProduct(
+        name: String, 
+        price: Double, 
+        phone: String, 
+        imageUri: String, 
+        description: String,
+        ownerUsername: String // Add username parameter
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val savedImagePath = saveImageToInternalStorage(Uri.parse(imageUri))
-            val newProduct = Product(
+            val product = Product(
+                id = UUID.randomUUID().toString(),
                 name = name,
+                description = description,
                 price = price,
-                phone = phone,
-                imagePath = savedImagePath // use saved image path
+                imageUri = savedImagePath, // Use the saved local image path
+                ownerUsername = ownerUsername, // Use the provided username
+                phone = phone
             )
-            productDao.insertProduct(newProduct)
+            productDao.insertProduct(product)
         }
     }
 
@@ -42,24 +53,32 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteProduct(product: Product) {
         viewModelScope.launch(Dispatchers.IO) {
             // Delete image from storage
-            deleteImageFromInternalStorage(product.imagePath)
+            product.imageUri?.let { deleteImageFromInternalStorage(it) }
             productDao.deleteProduct(product)
         }
     }
 
-    // Save image permanently to internal storage
+    fun getProductById(productId: String): Product? {
+        return allProducts.value?.find { it.id == productId }
+    }
+
     private fun saveImageToInternalStorage(uri: Uri): String {
-        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-        val fileName = "IMG_${System.currentTimeMillis()}.jpg"
-        val file = File(context.filesDir, fileName)
+        return try {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            val fileName = "IMG_${System.currentTimeMillis()}.jpg"
+            val file = File(context.filesDir, fileName)
 
-        inputStream?.use { input ->
-            FileOutputStream(file).use { output ->
-                input.copyTo(output)
+            inputStream?.use { input ->
+                FileOutputStream(file).use { output ->
+                    input.copyTo(output)
+                }
             }
-        }
 
-        return file.absolutePath
+            file.absolutePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "" // Return an empty string if saving fails
+        }
     }
 
     private fun deleteImageFromInternalStorage(path: String) {

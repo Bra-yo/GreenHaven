@@ -2,6 +2,7 @@ package com.brayo.greenhaven.ui.screens.userproducts
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -105,12 +106,14 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(modifier = Modifier.height(10.dp))
+
                 // Product Description
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Product Description") },
-                    leadingIcon = { Icon(painter = painterResource(R.drawable.name), contentDescription = "description") },
+                    leadingIcon = { Icon(painter = painterResource(R.drawable.description), contentDescription = "Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -125,8 +128,6 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                     modifier = Modifier.fillMaxWidth()
                 )
 
-
-
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Phone Number
@@ -137,7 +138,6 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                     leadingIcon = { Icon(painter = painterResource(R.drawable.phone), contentDescription = "Phone") },
                     modifier = Modifier.fillMaxWidth()
                 )
-
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -170,9 +170,27 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                 Button(
                     onClick = {
                         val priceValue = price.toDoubleOrNull()
-                        if (priceValue != null) {
-                            imageUri?.toString()?.let { viewModel.addProduct(name, priceValue, phone,it) }
-                            navController.popBackStack()
+                        when {
+                            name.isBlank() -> {
+                                Toast.makeText(context, "Product name cannot be empty!", Toast.LENGTH_SHORT).show()
+                            }
+                            priceValue == null || priceValue <= 0 -> {
+                                Toast.makeText(context, "Please enter a valid price!", Toast.LENGTH_SHORT).show()
+                            }
+                            phone.isBlank() -> {
+                                Toast.makeText(context, "Phone number cannot be empty!", Toast.LENGTH_SHORT).show()
+                            }
+                            description.isBlank() -> {
+                                Toast.makeText(context, "Product description cannot be empty!", Toast.LENGTH_SHORT).show()
+                            }
+                            imageUri == null -> {
+                                Toast.makeText(context, "Please select an image!", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                viewModel.addProduct(name, priceValue, phone, imageUri.toString(), description)
+                                Toast.makeText(context, "Product added successfully!", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),

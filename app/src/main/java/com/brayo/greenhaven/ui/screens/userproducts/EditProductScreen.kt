@@ -17,11 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.brayo.greenhaven.R
 import com.brayo.greenhaven.model.Product
 import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
 import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
@@ -38,8 +40,8 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
 
     // Track state variables only when product is found
     var name by remember { mutableStateOf(product?.name ?: "") }
-    var price by  remember { mutableStateOf(product?.price?.toString() ?: "") }
-    var imagePath by remember { mutableStateOf(product?.imagePath ?: "") }
+    var price by remember { mutableStateOf(product?.price?.toString() ?: "") }
+    var imagePath by remember { mutableStateOf(product?.imageUri ?: "") }
     var showMenu by remember { mutableStateOf(false) }
 
     // Image picker
@@ -114,7 +116,11 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
 
                 // Display Image
                 Image(
-                    painter = rememberAsyncImagePainter(model = Uri.parse(imagePath)),
+                    painter = if (imagePath.isNotEmpty()) {
+                        rememberAsyncImagePainter(model = Uri.parse(imagePath))
+                    } else {
+                        painterResource(id = R.drawable.loading) // Replace with your placeholder image
+                    },
                     contentDescription = "Product Image",
                     modifier = Modifier
                         .size(150.dp)
@@ -123,8 +129,9 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
 
                 Button(
                     onClick = { imagePicker.launch("image/*") },
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(start = 40.dp, end = 40.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 40.dp),
                     colors = ButtonDefaults.buttonColors(Color.LightGray)
                 ) {
                     Text("Change Image")
@@ -134,22 +141,31 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
                 Button(
                     onClick = {
                         val updatedPrice = price.toDoubleOrNull()
-                        if (updatedPrice != null) {
-                            viewModel.updateProduct(product.copy(name = name, price = updatedPrice, imagePath = imagePath))
+                        if (name.isBlank()) {
+                            Toast.makeText(context, "Product name cannot be empty!", Toast.LENGTH_SHORT).show()
+                        } else if (updatedPrice == null || updatedPrice <= 0) {
+                            Toast.makeText(context, "Please enter a valid price!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.updateProduct(
+                                product.copy(name = name, price = updatedPrice, imagePath = imagePath)
+                            )
                             Toast.makeText(context, "Product Updated!", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
-                        } else {
-                            Toast.makeText(context, "Invalid price entered!", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(start = 40.dp, end = 40.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 40.dp),
                     colors = ButtonDefaults.buttonColors(Color.Black)
                 ) {
                     Text("Update Product")
                 }
             } else {
-                Text(text = "Product not found", color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = "Product not found. Please try again.",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp)
+                )
                 Button(onClick = { navController.popBackStack() }) {
                     Text("Go Back")
                 }

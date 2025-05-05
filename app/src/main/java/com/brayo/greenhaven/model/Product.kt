@@ -5,14 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "products")
 data class Product(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
+    val id: String,
     val name: String,
+    val description: String,
     val price: Double,
-    val phone: String,
-    val imagePath: String,
-    val description : String
-) {
-    // Computed property to map imagePath to imageUri
-    val imageUri: String
-        get() = imagePath // Use imagePath as the URI
-}
+    val imageUri: String?, // Local image path
+    val ownerUsername: String, // Username of the product owner
+    val phone: String // Phone number of the owner
+)

@@ -57,8 +57,8 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
     var showMenu by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
-    val filteredProducts = productList.filter {
-        it.name.contains(searchQuery, ignoreCase = true)
+    val filteredProducts = remember(searchQuery, productList) {
+        productList.filter { it.name.contains(searchQuery, ignoreCase = true) }
     }
 
     Scaffold(
@@ -93,8 +93,7 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                     }
                 )
 
-
-                //Search Bar
+                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -111,8 +110,8 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                         )
                     },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,  // Border color when focused
-                        unfocusedBorderColor = Color.Gray, // Border color when not focused
+                        focusedBorderColor = Color.Black,
+                        unfocusedBorderColor = Color.Gray,
                         focusedTextColor = Color.Black,
                         unfocusedTextColor = Color.DarkGray
                     )
@@ -140,7 +139,7 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
 @Composable
 fun ProductItem(navController: NavController, product: Product, viewModel: ProductViewModel) {
     val painter: Painter = rememberAsyncImagePainter(
-        model = product.imagePath?.let { Uri.parse(it) } ?: Uri.EMPTY
+        model = product.imageUri?.let { Uri.parse(it) } ?: Uri.EMPTY
     )
     val context = LocalContext.current
 
@@ -278,7 +277,7 @@ fun generateProductPDF(context: Context, product: Product) {
     val paint = android.graphics.Paint()
 
     val bitmap: Bitmap? = try {
-        product.imagePath?.let {
+        product.imageUri?.let {
             val uri = Uri.parse(it)
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 BitmapFactory.decodeStream(inputStream)
