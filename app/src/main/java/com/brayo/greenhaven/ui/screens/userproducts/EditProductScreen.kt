@@ -36,7 +36,9 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
     val productList by viewModel.allProducts.observeAsState(emptyList())
 
     // Ensure productId is valid
-    val product = remember(productList) { productList.find { it.id == productId } }
+    val product = remember(productList) { 
+        productList.find { it.id == productId ?: -1 }
+    }
 
     // Track state variables only when product is found
     var name by remember { mutableStateOf(product?.name ?: "") }
@@ -147,7 +149,7 @@ fun EditProductScreen(productId: Int?, navController: NavController, viewModel: 
                             Toast.makeText(context, "Please enter a valid price!", Toast.LENGTH_SHORT).show()
                         } else {
                             viewModel.updateProduct(
-                                product.copy(name = name, price = updatedPrice, imagePath = imagePath)
+                                product.copy(name = name, price = updatedPrice, imageUri = imagePath)
                             )
                             Toast.makeText(context, "Product Updated!", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()

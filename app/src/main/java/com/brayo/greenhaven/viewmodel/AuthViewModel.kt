@@ -11,27 +11,28 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {
     private val _currentUser = MutableStateFlow<User?>(null)
+    var loggedInUser: ((User?) -> Unit)? = null
+
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
 private var isLoading: Boolean = false
 
-    fun registerUser(user: User, onError: (String) -> Unit) {
+
+
+
+
+
+
+
+    fun registerUser(user: User) {
         viewModelScope.launch {
-            try {
-                repository.registerUser(user)
-            } catch (e: Exception) {
-                onError(e.message ?: "An error occurred during registration")
-            }
+            repository.registerUser(user)
         }
     }
 
-    fun loginUser(email: String, password: String, onError: (String) -> Unit) {
+    fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            try {
-                val user = repository.loginUser(email, password)
-                _currentUser.value = (user) // Update LiveData
-            } catch (e: Exception) {
-                onError(e.message ?: "An error occurred during login")
-            }
+            val user = repository.loginUser(email, password)
+            loggedInUser?.invoke(user)
         }
     }
 
@@ -56,4 +57,6 @@ private var isLoading: Boolean = false
             }
         }
     }
+
+
 }

@@ -315,11 +315,7 @@ fun FarmerProfileScreen(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold
                                     )
-                                    Text(
-                                        text = product.description,
-                                        fontSize = 14.sp,
-                                        color = Color.Gray
-                                    )
+
                                 }
                             }
                         }

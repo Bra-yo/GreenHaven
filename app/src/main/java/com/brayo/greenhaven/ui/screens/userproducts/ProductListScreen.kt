@@ -41,11 +41,8 @@ import com.brayo.greenhaven.R
 import com.brayo.greenhaven.viewmodel.ProductViewModel
 import com.brayo.greenhaven.model.Product
 import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
-import com.brayo.greenhaven.navigation.ROUT_EDIT_PRODUCT
 import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
 import com.brayo.greenhaven.navigation.editProductRoute
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
@@ -148,8 +145,10 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                if (product.id != 0) {
-                    navController.navigate(ROUT_EDIT_PRODUCT)
+                product.id?.let { id ->
+                    navController.navigate(editProductRoute(id))
+                } ?: run {
+                    Toast.makeText(context, "Invalid product ID!", Toast.LENGTH_SHORT).show()
                 }
             },
         shape = RoundedCornerShape(12.dp),

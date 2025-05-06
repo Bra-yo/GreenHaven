@@ -71,14 +71,6 @@ fun SplashScreen(navController: NavHostController, context: Context) {
             modifier = Modifier.size(300.dp)
         )
 
-        // App Name
-        Text(
-            text = "GreenHaven",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

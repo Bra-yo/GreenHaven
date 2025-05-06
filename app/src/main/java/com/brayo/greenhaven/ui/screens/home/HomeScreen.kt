@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,7 +112,7 @@ private fun ActionCard(
 ) {
     Card(
         modifier = Modifier
-            .weight(1f)
+
             .aspectRatio(1f)
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
@@ -191,7 +190,7 @@ private fun DrawerBody(
         Pair("Add Product", Icons.Default.AddCircle),
         Pair("About", Icons.Default.Info),
         Pair("Login", Icons.Default.Person),
-        Pair("Register", Icons.Default.PersonAdd)
+        Pair("Register", Icons.Default.AddCircle)
     )
 
     Column {

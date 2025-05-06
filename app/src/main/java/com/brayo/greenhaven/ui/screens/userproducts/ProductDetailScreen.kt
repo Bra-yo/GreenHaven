@@ -93,12 +93,7 @@ fun ProductDetailScreen(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = product.description,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-
+                
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
 
                 // Seller Information

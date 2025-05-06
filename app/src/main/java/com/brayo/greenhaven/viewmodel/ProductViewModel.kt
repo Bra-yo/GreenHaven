@@ -25,16 +25,14 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
         name: String, 
         price: Double, 
         phone: String, 
-        imageUri: String, 
-        description: String,
-        ownerUsername: String // Add username parameter
+        imageUri: String,
+        ownerUsername: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val savedImagePath = saveImageToInternalStorage(Uri.parse(imageUri))
             val product = Product(
                 id = UUID.randomUUID().toString(),
                 name = name,
-                description = description,
                 price = price,
                 imageUri = savedImagePath, // Use the saved local image path
                 ownerUsername = ownerUsername, // Use the provided username

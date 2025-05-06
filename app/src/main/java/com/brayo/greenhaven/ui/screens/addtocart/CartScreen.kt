@@ -14,9 +14,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.brayo.greenhaven.model.CartItem
+import com.brayo.greenhaven.viewmodel.CartViewModel
 import java.text.NumberFormat
 import java.util.*
 
@@ -128,7 +131,7 @@ private fun CartItemCard(
                     IconButton(
                         onClick = { onQuantityChange(item.quantity - 1) }
                     ) {
-                        Icon(Icons.Default.Remove, "Decrease")
+                        Icon(Icons.Default.Clear, "Decrease")
                     }
                     Text(
                         text = item.quantity.toString(),

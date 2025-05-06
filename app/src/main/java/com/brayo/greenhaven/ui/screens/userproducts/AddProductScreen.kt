@@ -28,7 +28,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
 import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
-import com.brayo.greenhaven.viewmodel.ProductViewModel
+import com.brayo.greenhaven.viewmodel.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

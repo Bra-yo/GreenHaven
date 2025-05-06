@@ -49,23 +49,22 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Observe login logic
     LaunchedEffect(authViewModel) {
         authViewModel.loggedInUser = { user ->
             if (user == null) {
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
-                if (user.role == "farmer") {
-                    navController.navigate(ROUT_FARMERDASHBOARD) {
+                if (user.role == "consumer") {
+                    navController.navigate(ROUT_CONSUMERDASHBOARD) {
                     }
                 } else {
-                    navController.navigate(ROUT_CONSUMERDASHBOARD) {
+                    navController.navigate(ROUT_FARMERDASHBOARD) {
                     }
                 }
             }
         }
     }
-
+//End of login logic
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -174,10 +173,12 @@ fun LoginScreen(
             // Login Button
             Button(
                 onClick = {
-                    if (email.isBlank() || password.isBlank()) {
-                        Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
-                    } else {
-                        authViewModel.loginUser(email, password)
+                    when {
+                        email.isBlank() || password.isBlank() -> {
+                            Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                        } else-> {
+                            authViewModel.loginUser(email, password,)
+                        }
                     }
                 },
                 modifier = Modifier

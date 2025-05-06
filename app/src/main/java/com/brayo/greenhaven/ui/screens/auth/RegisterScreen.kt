@@ -14,8 +14,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -67,7 +69,6 @@ fun RegisterScreen(
     val roles = listOf("consumer", "farmer")
     val context = LocalContext.current
 
-
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -79,39 +80,46 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFFFFFF), Color(0xFFEFF5EC)) // Light greenish-white gradient
+                    colors = listOf(Color(0xFFFFFFFF), Color(0xFFEFF5EC))
                 )
             )
+            .verticalScroll(rememberScrollState()) // Add scrolling
     ) {
-        // Top Section with Decorative Image
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(80.dp)
+                .padding(end = 16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.reg), // Replace with your image resource
-                contentDescription = "Decorative Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+            // Back button
             IconButton(
-                onClick = { navController.popBackStack() }, // Navigate back
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color(0xFF388E3C) // Green tint for the back button
+                    tint = Color(0xFF388E3C)
                 )
             }
+
+
+            Image(
+                painter = painterResource(id = R.drawable.reg),
+                contentDescription = "Decorative Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(bottomStart = 16.dp))
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Existing Registration Form
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -240,20 +248,15 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //roles
-
-            var role by remember { mutableStateOf("consumer") }
-            val roleOptions = listOf("consumer", "farmer")
-            var expanded by remember { mutableStateOf(false) }
-
             // Role Selection Dropdown
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
                     value = role,
-                    onValueChange = { },
+                    onValueChange = {},
                     label = { Text("Role") },
                     leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Role Icon") },
                     trailingIcon = {
@@ -262,10 +265,12 @@ fun RegisterScreen(
                     readOnly = true,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .menuAnchor() // Add this modifier
                         .background(Color(0xFFF1F8E9), RoundedCornerShape(12.dp))
                         .padding(8.dp),
                     shape = RoundedCornerShape(12.dp)
                 )
+
                 ExposedDropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
@@ -276,7 +281,8 @@ fun RegisterScreen(
                             onClick = {
                                 role = selectionOption
                                 expanded = false
-                            }
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                         )
                     }
                 }
