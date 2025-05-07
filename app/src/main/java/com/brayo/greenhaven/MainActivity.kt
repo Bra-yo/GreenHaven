@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         // Get SharedPreferences instance
         val sharedPreferences = getSharedPreferences("GreenHavenPrefs", MODE_PRIVATE)
@@ -38,16 +40,10 @@ class MainActivity : ComponentActivity() {
                 // Initialize NavController
                 val navController = rememberNavController()
 
-                // Use ViewModelProvider to get ProductViewModel
-                val productViewModel: ProductViewModel by viewModels()
+
 
                 // Call AppNavHost with proper arguments
-                AppNavHost(
-                    modifier = Modifier.fillMaxSize(),
-                    navController = navController,
-                    startDestination = startDestination,
-                    productViewModel = productViewModel
-                )
+                AppNavHost()
             }
         }
     }

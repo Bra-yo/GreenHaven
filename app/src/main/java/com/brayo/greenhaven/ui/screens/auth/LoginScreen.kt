@@ -33,6 +33,7 @@ import com.brayo.greenhaven.navigation.ROUT_REGISTER
 import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.ROUT_ADD_PRODUCT
 import com.brayo.greenhaven.navigation.ROUT_CONSUMERDASHBOARD
+import com.brayo.greenhaven.navigation.ROUT_CONSUMERPROFILE
 import com.brayo.greenhaven.navigation.ROUT_FARMERDASHBOARD
 import com.brayo.greenhaven.navigation.ROUT_HOME
 

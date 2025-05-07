@@ -64,7 +64,7 @@ fun FarmerDashboardScreen(
     // Check if user is logged in
     LaunchedEffect(currentUser) {
         if (currentUser == null) {
-            navController.navigate("login") {
+            navController.navigate("farmerdashboard") {
                 popUpTo(0)
             }
         }

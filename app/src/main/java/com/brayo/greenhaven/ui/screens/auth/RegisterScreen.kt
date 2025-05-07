@@ -366,7 +366,6 @@ fun RegisterScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.facebook), // Replace with your Facebook icon resource
                         contentDescription = "Facebook Login",
-                        tint = Color(0xFF1877F2), // Facebook blue color
                         modifier = Modifier.size(24.dp)
                     )
                 }

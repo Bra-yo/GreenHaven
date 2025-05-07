@@ -60,7 +60,7 @@ fun ConsumerDashboardScreen(
     // Check if user is logged in
     LaunchedEffect(currentUser) {
         if (currentUser == null) {
-            navController.navigate("login") {
+            navController.navigate("consumerdashboard") {
                 popUpTo(0)
             }
         }
@@ -81,11 +81,11 @@ fun ConsumerDashboardScreen(
                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
             ) {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = "Welcome ${currentUser?.username ?: ""}",
                             color = Color.White
-                        ) 
+                        )
                     },
                     navigationIcon = {
                         IconButton(onClick = {}) {
@@ -137,19 +137,19 @@ fun ConsumerDashboardScreen(
                                 contentDescription = "Profile Picture",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize(),
-                              //  loading = {
+                                //  loading = {
                                 //    CircularProgressIndicator(
-                               //         color = MaterialTheme.colorScheme.onPrimary
-                               //     )
-                              //  },
-                              // error = {
-                                 //   Icon(
-                                  //      imageVector = Icons.Default.Person,
+                                //         color = MaterialTheme.colorScheme.onPrimary
+                                //     )
+                                //  },
+                                // error = {
+                                //   Icon(
+                                //      imageVector = Icons.Default.Person,
 //contentDescription = "Default Profile",
-                                    //    tint = Color.White,
-                                  //      modifier = Modifier.size(60.dp)
-                                 //   )
-                              //  }
+                                //    tint = Color.White,
+                                //      modifier = Modifier.size(60.dp)
+                                //   )
+                                //  }
                             )
                         } else {
                             Icon(
@@ -185,7 +185,7 @@ fun ConsumerDashboardScreen(
                     onClick = { navController.navigate(ROUT_HOME) },
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 DashboardCard(
                     icon = R.drawable.viewproducts,
                     title = "Products",
@@ -233,4 +233,3 @@ private fun DashboardCard(
         }
     }
 }
-

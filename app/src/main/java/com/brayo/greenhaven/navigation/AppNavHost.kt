@@ -38,12 +38,14 @@ import com.brayo.greenhaven.viewmodel.ProductViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("ViewModelConstructorInComposable")
+
+
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUT_SPLASH,
-    productViewModel: ProductViewModel
+    productViewModel: ProductViewModel = viewModel ()
 ) {
     val context = LocalContext.current
 
@@ -93,17 +95,17 @@ fun AppNavHost(
         composable(ROUT_CONSUMERPROFILE) {
             ConsumerProfileScreen(
                 navController = navController,
-                authViewModel = authViewModel, // Pass authViewModel
-                onSaveChanges = { updatedUser -> /* Handle save changes */ },
-                onChangePassword = { newPassword -> /* Handle password change */ }
+                authViewModel = authViewModel,
+                onSaveChanges = { updatedUser -> },
+                onChangePassword = { newPassword ->  }
             )
         }
         composable(ROUT_FARMERPROFILE) {
             FarmerProfileScreen(
                 navController = navController,
-                authViewModel = authViewModel, // Pass authViewModel
-                products = listOf(), // Replace with actual product list
-                onSaveChanges = { updatedUser -> /* Handle save changes */ }
+                authViewModel = authViewModel,
+                products = listOf(),
+                onSaveChanges = { updatedUser ->  }
             )
         }
 
@@ -146,7 +148,7 @@ fun AppNavHost(
             ProductDetailScreen(
                 navController = navController,
                 product = it,
-                cartViewModel = viewModel() // Create instance of CartViewModel
+                cartViewModel = viewModel()
             )
         }
     }
