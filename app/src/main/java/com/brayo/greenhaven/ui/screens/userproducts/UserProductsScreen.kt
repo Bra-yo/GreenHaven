@@ -189,7 +189,7 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                 OutlinedButton(
                     onClick = {
                        // viewModel.addToCart(product) // Add product to cart
-                       // navController.navigate("cart_screen") // Navigate to the cart screen
+                        navController.navigate("cart_screen") // Navigate to the cart screen
                     },
                     shape = RoundedCornerShape(8.dp),
                 ) {

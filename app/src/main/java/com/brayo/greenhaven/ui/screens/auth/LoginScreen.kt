@@ -56,7 +56,7 @@ fun LoginScreen(
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
                 if (user.role == "consumer") {
-                    navController.navigate(ROUT_CONSUMERDASHBOARD) {
+                    navController.navigate(ROUT_HOME) {
                     }
                 } else {
                     navController.navigate(ROUT_FARMERDASHBOARD) {

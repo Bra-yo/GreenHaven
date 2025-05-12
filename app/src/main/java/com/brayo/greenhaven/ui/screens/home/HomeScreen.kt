@@ -1,5 +1,6 @@
 package com.brayo.greenhaven.ui.screens.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,11 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.brayo.greenhaven.R
 import com.brayo.greenhaven.navigation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -85,22 +88,163 @@ private fun HomeContent(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            ActionCard(
-                icon = Icons.Default.AddCircle,
-                title = "Add Product",
-                onClick = { navController.navigate(ROUT_ADD_PRODUCT) }
-            )
-            ActionCard(
-                icon = Icons.Default.List,
-                title = "View Products",
-                onClick = { navController.navigate(ROUT_PRODUCT_LIST) }
-            )
-        }
+
+        Row (
+            modifier = Modifier.padding(start = 20.dp,end = 20.dp)){
+            //Card 1
+            Card (modifier = Modifier.width(160.dp).height(180.dp),
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .clickable{navController.navigate(ROUT_HOME)},
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(com.brayo.greenhaven.R.drawable.home),
+                        contentDescription = "home",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "Home",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End of Card 1
+
+            Spacer(modifier = Modifier.width(30.dp))
+
+            //Card 2
+            Card (modifier = Modifier
+                .width(160.dp)
+                .height(180.dp)
+                .clickable{navController.navigate(ROUT_PRODUCT_LIST)},
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(com.brayo.greenhaven.R.drawable.viewproducts),
+                        contentDescription = "products",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "Products",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End od=f Card 2
+
+
+        }//End of Row
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row (
+            modifier = Modifier.padding(start = 20.dp,end = 20.dp)){
+            //Card 1
+            Card (modifier = Modifier.width(160.dp).height(180.dp),
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .clickable{navController.navigate(ROUT_CART)},
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(com.brayo.greenhaven.R.drawable.basket),
+                        contentDescription = "basket",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "Basket",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End of Card 1
+
+            Spacer(modifier = Modifier.width(30.dp))
+
+            //Card 2
+            Card (modifier = Modifier
+                .width(160.dp)
+                .height(180.dp)
+                .clickable{navController.navigate(ROUT_INTENT)},
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(com.brayo.greenhaven.R.drawable.intent),
+                        contentDescription = "intent",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "Intent",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End od=f Card 2
+
+
+        }//End of Row
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row (
+            modifier = Modifier.padding(start = 20.dp,end = 20.dp)){
+            //Card 1
+            Card (modifier = Modifier.width(160.dp).height(180.dp),
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .clickable{navController.navigate(ROUT_ABOUT)},
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(com.brayo.greenhaven.R.drawable.description),
+                        contentDescription = "about",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "About",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End of Card 1
+
+            Spacer(modifier = Modifier.width(30.dp))
+
+            //Card 2
+            Card (modifier = Modifier
+                .width(160.dp)
+                .height(180.dp)
+                .clickable{navController.navigate(ROUT_CONSUMERPROFILE)},
+                elevation = CardDefaults.cardElevation(10.dp))
+            {
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(R.drawable.profile),
+                        contentDescription = "profile",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Text(text = "Profile",
+                        fontSize = 15.sp)
+                }
+
+
+            }
+            //End od=f Card 2
+
+
+        }//End of Row
+
+        Spacer(modifier = Modifier.height(20.dp))
+
     }
 }
 
@@ -185,12 +329,13 @@ private fun DrawerBody(
     scope: CoroutineScope
 ) {
     val items = listOf(
-        Pair("Home", Icons.Default.Home),
+        Pair("Dashboard", Icons.Default.Home),
         Pair("Products", Icons.Default.List),
-        Pair("Add Product", Icons.Default.AddCircle),
-        Pair("About", Icons.Default.Info),
-        Pair("Login", Icons.Default.Person),
-        Pair("Register", Icons.Default.AddCircle)
+        Pair("My Basket", Icons.Default.ShoppingCart),
+        Pair("Intent", Icons.Default.MailOutline),
+        Pair("login", Icons.Default.Person),
+        Pair("register", Icons.Default.AddCircle),
+        Pair("Log Out", Icons.Default.ExitToApp)
     )
 
     Column {
@@ -201,12 +346,13 @@ private fun DrawerBody(
                 selected = false,
                 onClick = {
                     val route = when(title) {
-                        "Home" -> ROUT_HOME
+                        "Dashboard" -> ROUT_HOME
                         "Products" -> ROUT_PRODUCT_LIST
-                        "Add Product" -> ROUT_ADD_PRODUCT
-                        "About" -> ROUT_ABOUT
+                        "My Basket" -> ROUT_CART
+                        "Intent" -> ROUT_INTENT
                         "Login" -> ROUT_LOGIN
                         "Register" -> ROUT_REGISTER
+                        "Log Out" -> ROUT_LOGIN
                         else -> ROUT_HOME
                     }
                     navController.navigate(route)

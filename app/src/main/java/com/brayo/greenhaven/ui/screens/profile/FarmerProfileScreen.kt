@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -132,6 +134,7 @@ fun FarmerProfileScreen(
                 .fillMaxSize()
                 .background(Color(0xFFEFF5EC)) // Light greenish background
                 .pullRefresh(pullRefreshState)
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
@@ -156,20 +159,20 @@ fun FarmerProfileScreen(
                             contentDescription = "Profile Picture",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize(),
-                            onLoading = {
+                          //  onLoading = {
 // CircularProgressIndicator//  (
 //  modifier = Modifier.size(24.dp),//
 //    color = MaterialTheme.colorScheme.primary
 //                             // )
-                            },
-                            onError = {
+                          //  },
+                          //  onError = {
 //                                  Icon(
 //                                        imageVector = Icons.Default.Refresh,
                                //                                         contentDescription = "Error loading image",
 //                                          tint = Color.Red,
 //                                          modifier = Modifier.size(40.dp)
 //                                    )
-                            }
+                        //    }
                         )
                     } else {
                         Icon(

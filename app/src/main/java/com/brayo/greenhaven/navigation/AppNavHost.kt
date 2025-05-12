@@ -32,6 +32,7 @@ import com.brayo.greenhaven.ui.screens.splash.SplashScreen
 import com.brayo.greenhaven.ui.screens.userproducts.AddProductScreen
 import com.brayo.greenhaven.ui.screens.userproducts.EditProductScreen
 import com.brayo.greenhaven.ui.screens.userproducts.ProductDetailScreen
+import com.brayo.greenhaven.ui.screens.userproducts.ProductListScreen
 import com.brayo.greenhaven.viewmodel.AuthViewModel
 import com.brayo.greenhaven.viewmodel.ProductViewModel
 
@@ -133,6 +134,9 @@ fun AppNavHost(
 
         composable(ROUT_PRODUCT_LIST) {
             UserProductScreen(navController, productViewModel)
+        }
+        composable(ROUT_PRODUCT_VIEW) {
+            ProductListScreen(navController, productViewModel)
         }
 
 

@@ -15,6 +15,7 @@ const val ROUT_INTENT = "intent"
 const val ROUT_PRODUCT_DETAIL = "product_detail/{productId}"
 const val ROUT_ADD_PRODUCT = "add_product"
 const val ROUT_PRODUCT_LIST = "product_list"
+const val ROUT_PRODUCT_VIEW = "product_view"
 const val ROUT_EDIT_PRODUCT = "edit_product/{productId}"
 
 // ✅ Helper function for navigation
