@@ -16,11 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.brayo.greenhaven.data.UserDatabase
 import com.brayo.greenhaven.repository.UserRepository
+import com.brayo.greenhaven.ui.screens.Dashboards.ConsumerDashboardScreen
 import com.brayo.greenhaven.ui.screens.about.AboutScreen
 import com.brayo.greenhaven.ui.screens.addtocart.CartScreen
 import com.brayo.greenhaven.ui.screens.auth.LoginScreen
 import com.brayo.greenhaven.ui.screens.auth.RegisterScreen
-import com.brayo.greenhaven.ui.screens.dashboards.ConsumerDashboardScreen
 import com.brayo.greenhaven.ui.screens.dashboards.FarmerDashboardScreen
 import com.brayo.greenhaven.ui.screens.home.HomeScreen
 import com.brayo.greenhaven.ui.screens.intent.IntentScreen
@@ -61,7 +61,10 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(ROUT_HOME) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
         composable(ROUT_ABOUT) {
             AboutScreen(navController)
@@ -81,13 +84,12 @@ fun AppNavHost(
         composable(ROUT_CONSUMERDASHBOARD) {
             ConsumerDashboardScreen(
                 navController = navController,
-                authViewModel = authViewModel // Pass authViewModel
             )
         }
         composable(ROUT_FARMERDASHBOARD) {
             FarmerDashboardScreen(
                 navController = navController,
-                authViewModel = authViewModel // Pass authViewModel
+
             )
         }
         composable(ROUT_INTENT) {

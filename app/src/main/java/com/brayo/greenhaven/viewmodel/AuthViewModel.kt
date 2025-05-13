@@ -14,14 +14,7 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
     var loggedInUser: ((User?) -> Unit)? = null
 
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
-private var isLoading: Boolean = false
-
-
-
-
-
-
-
+    private var isLoading: Boolean = false
 
     fun registerUser(user: User) {
         viewModelScope.launch {
@@ -44,6 +37,23 @@ private var isLoading: Boolean = false
         return _currentUser.value != null
     }
 
+    fun checkCurrentUser() {
+        viewModelScope.launch {
+            try {
+                isLoading = true
+                val user = repository.getCurrentUser()
+                _currentUser.value = user
+                loggedInUser?.invoke(user)
+            } catch (e: Exception) {
+                // Handle any errors
+                _currentUser.value = null
+                loggedInUser?.invoke(null)
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
     fun refreshUserData() {
         viewModelScope.launch {
             try {
@@ -57,6 +67,4 @@ private var isLoading: Boolean = false
             }
         }
     }
-
-
 }

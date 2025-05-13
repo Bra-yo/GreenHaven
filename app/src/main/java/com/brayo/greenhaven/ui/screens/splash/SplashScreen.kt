@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.R
+import com.brayo.greenhaven.navigation.ROUT_HOME
 import com.brayo.greenhaven.navigation.ROUT_LOGIN
 import com.brayo.greenhaven.navigation.ROUT_ONBOARD
 import kotlinx.coroutines.delay
@@ -46,7 +47,7 @@ fun SplashScreen(navController: NavHostController, context: Context) {
             sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
         } else {
             // Navigate to login screen
-            navController.navigate(ROUT_LOGIN) {
+            navController.navigate(ROUT_HOME) {
                 popUpTo(0) // Clear the back stack
             }
         }

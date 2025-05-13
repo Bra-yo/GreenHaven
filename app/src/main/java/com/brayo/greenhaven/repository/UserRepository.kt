@@ -11,4 +11,8 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun loginUser(email: String, password: String): User? {
         return userDao.loginUser(email, password)
     }
+
+    suspend fun getCurrentUser(): User? {
+        return userDao.getCurrentUser()
+    }
 }

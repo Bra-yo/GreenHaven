@@ -3,43 +3,21 @@ package com.brayo.greenhaven.ui.screens.Dashboards
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.brayo.greenhaven.R
@@ -49,277 +27,183 @@ import com.brayo.greenhaven.navigation.ROUT_CONSUMERPROFILE
 import com.brayo.greenhaven.navigation.ROUT_HOME
 import com.brayo.greenhaven.navigation.ROUT_INTENT
 import com.brayo.greenhaven.navigation.ROUT_PRODUCT_LIST
-
+import com.brayo.greenhaven.ui.theme.green
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.layout.ContentScale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(navController: NavController) {
-    //Start of Main Column
+fun ConsumerDashboardScreen(navController: NavController) {
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).background(
-            neworange
-        )
+        modifier = Modifier
+            .fillMaxSize()
+            .background(green)
     ) {
-        //Box Layout
-        Box() {
+        // Top App Bar with Menu only
+        TopAppBar(
+            title = { },
+            navigationIcon = {
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = Color.White
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = green
+            )
+        )
 
-            //Start Card
-            Card(
-                modifier = Modifier.fillMaxWidth().height(300.dp),
-                shape = RoundedCornerShape(bottomStart = 60.dp, bottomEnd = 60.dp),
-                colors = CardDefaults.cardColors(neworange1)
-
-            ) {
-                TopAppBar(
-
-                    title = { Text(text = "Dashboard Section") },
-                    navigationIcon = {
-                        IconButton(onClick = {}) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    }
+        // Main Content
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                WelcomeCard()
+            }
+            item {
+                // Search bar moved below welcome card
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    placeholder = { Text("Search...") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        disabledContainerColor = Color.White,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    )
                 )
+            }
+            item {
+                ActionRow(navController)
+            }
+            item {
+                ActionRow(navController, isSecondRow = true)
+            }
+        }
 
-            }//End Of Card
+        // Floating Action Button
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            FloatingActionButton(
+                onClick = { navController.navigate(ROUT_CART) },
+                containerColor = Color.Magenta,
+                contentColor = Color.White,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Call, contentDescription = "Cart")
+            }
+        }
+    }
+}
 
-
-            //@nd card
-            Card(
-                modifier = Modifier.fillMaxWidth()
-                    .height(180.dp)
-                    .align(alignment = Alignment.BottomCenter)
-                    .padding(start = 20.dp, end = 20.dp)
-                    .offset(y = 90.dp)
-
-
+@Composable
+fun WelcomeCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Background Image with blur
+            Image(
+                painter = painterResource(id = R.drawable.farm),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(radius = 3.dp),
+                contentScale = ContentScale.Crop
+            )
+            
+            // Content overlay
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Welcome To Haraka Mall",
-                    fontSize = 30.sp,
+                    text = "Welcome to Haraka Mall",
+                    style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
-                    color = Color.Magenta,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(top = 60.dp)
+                    color = Color.White // Changed to white for better contrast
                 )
-
-            }//End of Card
+            }
         }
-        //End of Box
-        Spacer(modifier = Modifier.height(100.dp))
+    }
+}
 
+@Composable
+fun ActionRow(navController: NavController, isSecondRow: Boolean = false) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        ActionCard(
+            title = if (isSecondRow) "Basket" else "Home",
+            iconRes = if (isSecondRow) R.drawable.basket else R.drawable.home,
+            onClick = { navController.navigate(if (isSecondRow) ROUT_CART else ROUT_HOME) }
+        )
+        ActionCard(
+            title = if (isSecondRow) "Intent" else "Products",
+            iconRes = if (isSecondRow) R.drawable.intent else R.drawable.viewproducts,
+            onClick = { navController.navigate(if (isSecondRow) ROUT_INTENT else ROUT_PRODUCT_LIST) }
+        )
+    }
+}
 
-        Row(
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+@Composable
+fun ActionCard(title: String, iconRes: Int, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .height(180.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            //Card 1
-            Card(
-                modifier = Modifier.width(160.dp).height(180.dp),
-                elevation = CardDefaults.cardElevation(10.dp)
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = title,
+                modifier = Modifier.size(80.dp)
             )
-            {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { navController.navigate(ROUT_HOME) },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.home),
-                        contentDescription = "home",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "Home",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End of Card 1
-
-            Spacer(modifier = Modifier.width(30.dp))
-
-            //Card 2
-            Card(
-                modifier = Modifier
-                    .width(160.dp)
-                    .height(180.dp)
-                    .clickable { navController.navigate(ROUT_PRODUCT_LIST) },
-                elevation = CardDefaults.cardElevation(10.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
             )
-            {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.viewproducts),
-                        contentDescription = "products",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "Products",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End od=f Card 2
-
-
-        }//End of Row
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Row(
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-        ) {
-            //Card 1
-            Card(
-                modifier = Modifier.width(160.dp).height(180.dp),
-                elevation = CardDefaults.cardElevation(10.dp)
-            )
-            {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { navController.navigate(ROUT_CART) },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.basket),
-                        contentDescription = "basket",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "Basket",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End of Card 1
-
-            Spacer(modifier = Modifier.width(30.dp))
-
-            //Card 2
-            Card(
-                modifier = Modifier
-                    .width(160.dp)
-                    .height(180.dp)
-                    .clickable { navController.navigate(ROUT_INTENT) },
-                elevation = CardDefaults.cardElevation(10.dp)
-            )
-            {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.intent),
-                        contentDescription = "intent",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "Intent",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End od=f Card 2
-
-
-        }//End of Row
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Row(
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-        ) {
-            //Card 1
-            Card(
-                modifier = Modifier.width(160.dp).height(180.dp),
-                elevation = CardDefaults.cardElevation(10.dp)
-            )
-            {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { navController.navigate(ROUT_ABOUT) },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.description),
-                        contentDescription = "about",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "About",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End of Card 1
-
-            Spacer(modifier = Modifier.width(30.dp))
-
-            //Card 2
-            Card(
-                modifier = Modifier
-                    .width(160.dp)
-                    .height(180.dp)
-                    .clickable { navController.navigate(ROUT_CONSUMERPROFILE) },
-                elevation = CardDefaults.cardElevation(10.dp)
-            )
-            {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.profile),
-                        contentDescription = "profile",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Text(
-                        text = "Profile",
-                        fontSize = 15.sp
-                    )
-                }
-
-
-            }
-            //End od=f Card 2
-
-
-        }//End of Row
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-
-//End Of Main Column
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ConsumerDashboardScreenPreview(){
-
-
+fun ConsumerDashboardScreenPreview() {
     ConsumerDashboardScreen(rememberNavController())
-
-
 }
